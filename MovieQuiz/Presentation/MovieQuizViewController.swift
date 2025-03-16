@@ -64,6 +64,17 @@ final class MovieQuizViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        imageView.layer.masksToBounds = true
+        imageView.layer.cornerRadius = 20
+        
+        if let font = UIFont(name: "YS Display-Medium", size: 20) {
+            counterLabel.font = font
+        }
+        if let font = UIFont(name: "YS Display-Bold", size: 23) {
+            textLabel.font = font
+        }
+        
         let question = questions[currentQuestionIndex]
         let viewModel =  convert(model: question)
         show(quiz: viewModel)
@@ -71,12 +82,12 @@ final class MovieQuizViewController: UIViewController {
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         let isCorrect = questions[currentQuestionIndex].isCorrect == true
-        showAnswerResult(isCorrect: isCorrect)
+        showAnswerResult(isCorrect: isCorrect, sender: sender)
     }
     
     @IBAction private func noButtonClicked(_ sender: UIButton) {
         let isCorrect = questions[currentQuestionIndex].isCorrect == false
-        showAnswerResult(isCorrect: isCorrect)
+        showAnswerResult(isCorrect: isCorrect, sender: sender)
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -93,24 +104,26 @@ final class MovieQuizViewController: UIViewController {
         counterLabel.text = step.questionNumber
     }
     
-    private func showAnswerResult(isCorrect: Bool) {
+    private func showAnswerResult(isCorrect: Bool, sender: UIButton) {
+        sender.isEnabled = false
+        
         if isCorrect {
             correctAnswers += 1
         }
         
-        imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
-        imageView.layer.cornerRadius = 20
-        imageView.layer.borderColor = isCorrect ? UIColor.green.cgColor : UIColor.red.cgColor
+        imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            sender.isEnabled = true
             self.showNextQuestionOrResult()
         }
     }
     
     private func showNextQuestionOrResult() {
         if currentQuestionIndex + 1 == questions.count {
-            let text = "Ваш результат \(correctAnswers)"
+            let score = "\(correctAnswers)/\(questions.count)"
+            let text = "Ваш результат \(score)"
             let viewModel = QuizResultViewModel(
                 title: "Этот раунд окончен!",
                 text: text,
