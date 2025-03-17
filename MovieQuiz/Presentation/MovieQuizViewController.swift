@@ -61,6 +61,7 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet private var counterLabel: UILabel!
+    @IBOutlet private var titleLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,12 +69,9 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 20
         
-        if let font = UIFont(name: "YS Display-Medium", size: 20) {
-            counterLabel.font = font
-        }
-        if let font = UIFont(name: "YS Display-Bold", size: 23) {
-            textLabel.font = font
-        }
+        counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        titleLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
         
         let question = questions[currentQuestionIndex]
         let viewModel =  convert(model: question)
