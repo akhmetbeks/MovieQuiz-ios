@@ -6,8 +6,8 @@
 //
 import UIKit
 
-class AlertPresenter {
-    weak var delegate: UIViewController?
+class AlertPresenter: AlertPresenterProtocol {
+    weak var delegate: AlertPresenterDelegate?
     
     func showAlert(_ result: AlertModel) {
         let alert = UIAlertController(
@@ -20,6 +20,6 @@ class AlertPresenter {
         }
         
         alert.addAction(action)
-        delegate?.present(alert, animated: true, completion: nil)
+        delegate?.presentAlert(alert)
     }
 }

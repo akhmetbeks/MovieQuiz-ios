@@ -1,8 +1,9 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
+final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, AlertPresenterDelegate {
     private let questionsAmount = 10
     private var questionFactory: QuestionFactoryProtocol?
+    private var alertPresenter: AlertPresenterProtocol?
     private var currentQuestion: QuizQuestion?
     
     private var currentQuestionIndex = 0
@@ -26,7 +27,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         var questionFactory = QuestionFactory()
         questionFactory.delegate = self
         self.questionFactory = questionFactory
-        
         self.questionFactory?.requestNextQuestion()
     }
     
@@ -38,6 +38,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
             self?.show(quiz: viewModel)
+        }
+    }
+    
+    // MARK: - AlertPresenterDelegate
+    func presentAlert(_ alert: UIAlertController) {
+        DispatchQueue.main.async { [weak self] in
+            self?.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -104,9 +111,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 buttonText: "Сыграть еще раз",
                 completion: completion)
             
-            let presenter = AlertPresenter()
-            presenter.delegate = self
-            presenter.showAlert(alertModel)
+            let alertPresenter = AlertPresenter()
+            alertPresenter.delegate = self
+            self.alertPresenter = alertPresenter
+            self.alertPresenter?.showAlert(alertModel)
             return
         }
         
