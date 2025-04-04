@@ -4,6 +4,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     private let questionsAmount = 10
     private var questionFactory: QuestionFactoryProtocol?
     private var alertPresenter: AlertPresenterProtocol?
+    private var statisticService: StatisticServiceProtocol?
     private var currentQuestion: QuizQuestion?
     
     private var currentQuestionIndex = 0
@@ -28,6 +29,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         questionFactory.delegate = self
         self.questionFactory = questionFactory
         self.questionFactory?.requestNextQuestion()
+        
+        let statisticService = StatisticService()
+        self.statisticService = statisticService
     }
     
     // MARK: - QuestionFactoryDelegate
@@ -93,8 +97,16 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     
     private func showNextQuestionOrResult() {
         if currentQuestionIndex + 1 == questionsAmount {
+            statisticService?.store(correct: correctAnswers, total: questionsAmount)
+            
             let score = "\(correctAnswers)/\(questionsAmount)"
-            let text = "Ваш результат \(score)"
+            
+            let gamesCount = statisticService?.gamesCount ?? 0
+            let bestGame = "\(statisticService?.bestGame.correct  ?? 0)/\(statisticService?.bestGame.total ?? 0)"
+            let date = statisticService?.bestGame.date.dateTimeString ?? ""
+            let totalAccuracy = "\(String(format: "%.2f", statisticService?.totalAccuracy ?? 0.0))%"
+            let message = "Ваш результат \(score)\n Количество сыграных квизов: \(gamesCount)\n Рекорд: \(bestGame) (\(date))\n Средняя точность: \(totalAccuracy)"
+            
             let completion = { [weak self] in
                 guard let self = self else { return }
                 self.imageView.layer.borderWidth = 0
@@ -105,9 +117,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
                 let viewModel = self.convert(model: currentQuestion)
                 self.show(quiz: viewModel)
             }
+            
             let alertModel = AlertModel(
                 title: "Этот раунд окончен!",
-                message: text,
+                message: message,
                 buttonText: "Сыграть еще раз",
                 completion: completion)
             
