@@ -4,10 +4,10 @@
 //
 //  Created by Sultan Akhmetbek on 31.03.2025.
 //
+import Foundation
 
 struct QuizQuestion {
-    let image: String
-    let rating: Double
-    let question: String
+    let image: Data
+    let text: String
     let isCorrect: Bool
 }
