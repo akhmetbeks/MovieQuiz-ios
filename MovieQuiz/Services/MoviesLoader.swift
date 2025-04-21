@@ -28,9 +28,13 @@ struct MoviesLoader: MoviesLoading {
             case .success(let data):
                 do {
                     let movies = try JSONDecoder().decode(MostPopularMovies.self, from: data)
+                    if movies.errorMessage != "" {
+                        let error = NSError(domain: "MovieQuizErrorDomain", code: 200, userInfo: [NSLocalizedDescriptionKey : movies.errorMessage])
+                        handler(.failure(error))
+                        return
+                    }
                     handler(.success(movies))
                 } catch let decodingError as DecodingError {
-                    print("Decoding error: \(decodingError)")
                     handler(.failure(decodingError))
                 } catch {
                     handler(.failure(error))

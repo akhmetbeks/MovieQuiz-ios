@@ -4,8 +4,6 @@
 //
 //  Created by Sultan Akhmetbek on 02.04.2025.
 //
-
-
 struct AlertModel {
     let title: String
     let message: String

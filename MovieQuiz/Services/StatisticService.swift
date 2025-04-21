@@ -4,10 +4,9 @@
 //
 //  Created by Sultan Akhmetbek on 03.04.2025.
 //
-
 import Foundation
 
-class StatisticService {
+final class StatisticService {
     private let storage: UserDefaults = .standard
     
     private enum Keys: String {

@@ -4,7 +4,6 @@
 //
 //  Created by Sultan Akhmetbek on 02.04.2025.
 //
-
 protocol StatisticServiceProtocol {
     var totalAccuracy: Double { get }
     var gamesCount: Int { get }

@@ -16,15 +16,22 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     
+    private enum Fonts {
+        static let ysMedium = "YSDisplay-Medium"
+        static let ysBold = "YSDisplay-Bold"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 20
         
-        counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        titleLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
-        textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
+        activityIndicator.hidesWhenStopped = true
+        
+        counterLabel.font = UIFont(name: Fonts.ysMedium, size: 20)
+        titleLabel.font = UIFont(name: Fonts.ysMedium, size: 20)
+        textLabel.font = UIFont(name: Fonts.ysBold, size: 23)
         
         let questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         self.questionFactory = questionFactory
@@ -87,7 +94,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
                 self.currentQuestionIndex = 0
                 self.correctAnswers = 0
                 
-                self.questionFactory?.requestNextQuestion()
+                self.questionFactory?.loadData()
             }
         
         let alertPresenter = AlertPresenter()
@@ -97,12 +104,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     
     private func showLoadingIndicator() {
-        activityIndicator.isHidden = false
         activityIndicator.startAnimating()
     }
     
     private func hideLoadingIndicator() {
-        activityIndicator.isHidden = true
         activityIndicator.stopAnimating()
     }
     

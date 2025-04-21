@@ -6,12 +6,12 @@
 //
 import Foundation
 
-struct MostPopularMovies: Codable {
+struct MostPopularMovies: Decodable {
     let errorMessage: String
     let items: [MostPopularMovie]
 }
 
-struct MostPopularMovie: Codable {
+struct MostPopularMovie: Decodable {
     let title: String
     let rating: String?
     let imageURL: URL
@@ -33,5 +33,3 @@ struct MostPopularMovie: Codable {
         case imageURL = "image"
     }
 }
-
-
